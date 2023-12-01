@@ -15,6 +15,14 @@ import java.nio.charset.StandardCharsets;
 
 public class OpenAPIToFunctions {
 
+    public static final String SYSTEM_MESSAGE = "You are a helpful assistant.Respond to the following prompt by using function_call " +
+            "and then summarize actions. Ask for clarification if a user request is ambiguous.";
+    public static final String USER_INSTRUCTION = "Instruction: Get all the events. Then create a new event named AGI Party. Then " +
+            "delete event with id 2456.";
+    public static final Integer MAX_CALLS = 5;
+
+    public static final String BASE_URL = "https://us-central1-aiplatform.googleapis.com/v1";
+
     public List<JSONObject> openapiToFunctions(JSONObject openapiSpec) {
         List<JSONObject> functions = new ArrayList<>();
 
@@ -72,14 +80,6 @@ public class OpenAPIToFunctions {
 
         return functions;
     }
-
-    public static final String SYSTEM_MESSAGE = "You are a helpful assistant.Respond to the following prompt by using function_call " +
-                                                 "and then summarize actions. Ask for clarification if a user request is ambiguous.";
-    public static final String USER_INSTRUCTION = "Instruction: Get all the events. Then create a new event named AGI Party. Then " +
-                                                   "delete event with id 2456.";
-    public static final Integer MAX_CALLS = 5;
-
-    public static final String BASE_URL = "https://us-central1-aiplatform.googleapis.com/v1";
 
     public String postRequest(String url, String authToken, List<String> messages) throws IOException {
         // Create a JSON object to send as the request body.
