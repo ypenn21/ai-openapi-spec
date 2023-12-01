@@ -47,7 +47,7 @@ public class Main {
         int numCalls = 0;
 //        while (numCalls < OpenAPIToFunctions.MAX_CALLS) {
 //            try {
-//                String response = openApiSpec.postRequest(OpenAPIToFunctions.BASE_URL, authToken, messages);
+//                String response = openApiSpec.postRequestVertexAI(OpenAPIToFunctions.BASE_URL, authToken, messages);
 //                System.out.println(response);
 //            } catch (IOException e) {
 //                System.out.println("Message");
