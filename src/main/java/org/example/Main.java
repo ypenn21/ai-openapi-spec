@@ -45,26 +45,26 @@ public class Main {
         messages.add("{\"content\": \"" + OpenAPIToFunctions.USER_INSTRUCTION + "\", \"role\": \"user\"}");
 
         int numCalls = 0;
-        while (numCalls < OpenAPIToFunctions.MAX_CALLS) {
-            try {
-                String response = openApiSpec.postRequest(OpenAPIToFunctions.BASE_URL, authToken, messages);
-                System.out.println(response);
-            } catch (IOException e) {
-                System.out.println("Message");
-
-                System.out.println("Exception:"+e.getMessage());
-                break;
-            }
-            // Handle the JSON response here
-            // Parse the response and process according to your requirements
-            // For brevity, the actual parsing and handling of the response are omitted
-
-            // Simulating the loop condition
-            numCalls++;
-            if (numCalls >= OpenAPIToFunctions.MAX_CALLS) {
-                System.out.println("Reached max chained function calls: " + OpenAPIToFunctions.MAX_CALLS);
-                break;
-            }
-        }
+//        while (numCalls < OpenAPIToFunctions.MAX_CALLS) {
+//            try {
+//                String response = openApiSpec.postRequest(OpenAPIToFunctions.BASE_URL, authToken, messages);
+//                System.out.println(response);
+//            } catch (IOException e) {
+//                System.out.println("Message");
+//
+//                System.out.println("Exception:"+e.getMessage());
+//                break;
+//            }
+//            // Handle the JSON response here
+//            // Parse the response and process according to your requirements
+//            // For brevity, the actual parsing and handling of the response are omitted
+//
+//            // Simulating the loop condition
+//            numCalls++;
+//            if (numCalls >= OpenAPIToFunctions.MAX_CALLS) {
+//                System.out.println("Reached max chained function calls: " + OpenAPIToFunctions.MAX_CALLS);
+//                break;
+//            }
+//        }
     }
 }

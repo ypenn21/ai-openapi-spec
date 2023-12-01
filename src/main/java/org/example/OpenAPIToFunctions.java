@@ -51,9 +51,7 @@ public class OpenAPIToFunctions {
                 String desc = (String) spec.getOrDefault("description", spec.getOrDefault("summary", ""));
 
                 JSONObject schema = new JSONObject();
-                JSONObject requestBody = ((JSONObject) ((JSONObject) ((JSONObject) spec.getOrDefault("requestBody", new JSONObject()))
-                        .getOrDefault("content", new JSONObject()))
-                        .getOrDefault("application/json", new JSONObject()));
+                JSONObject requestBody = (JSONObject) spec.getOrDefault("requestBody", new JSONObject());
                 if (!requestBody.isEmpty()) {
                     schema.put("requestBody", requestBody.get("schema"));
                 }
@@ -61,19 +59,24 @@ public class OpenAPIToFunctions {
                 List<JSONObject> params = (List<JSONObject>) spec.getOrDefault("parameters", new ArrayList<>());
                 JSONObject paramProperties = new JSONObject();
                 for (JSONObject param : params) {
-                    if (param.containsKey("schema")) {
-                        paramProperties.put((String) param.get("name"), param.get("schema"));
-                    }
+//                    if (param.containsKey("parameters")) {
+                        paramProperties.put((String) param.get("name"), param);
+//                    }
                 }
                 JSONObject parameters = new JSONObject();
-                parameters.put("type", "object");
-                parameters.put("properties", paramProperties);
-                schema.put("parameters", parameters);
+                if(!paramProperties.isEmpty())
+                    parameters.put("properties", paramProperties);
+                if(!schema.isEmpty())
+                    parameters.put("requestBody", schema);
+//                if(!parameters.isEmpty())
+//                    schema.put("parameters", parameters);
 
                 JSONObject functionDetails = new JSONObject();
                 functionDetails.put("name", function_name);
                 functionDetails.put("description", desc);
-                functionDetails.put("parameters", schema);
+                if(!parameters.isEmpty())
+                    parameters.put("type", "object");
+                functionDetails.put("parameters", parameters);
                 functions.add(functionDetails);
             }
         }
