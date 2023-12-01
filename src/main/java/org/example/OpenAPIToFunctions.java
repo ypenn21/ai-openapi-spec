@@ -84,7 +84,7 @@ public class OpenAPIToFunctions {
         return functions;
     }
 
-    public String postRequest(String url, String authToken, List<String> messages) throws IOException {
+    public String postRequestVertexAI(String url, String authToken, List<String> messages) throws IOException {
         // Create a JSON object to send as the request body.
 
         // Create a URI for the API endpoint.
