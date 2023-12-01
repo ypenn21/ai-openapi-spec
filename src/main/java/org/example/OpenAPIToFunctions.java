@@ -4,8 +4,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.*;
-import java.net.URL;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.net.URI;
@@ -13,7 +12,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.util.Scanner;
 
 public class OpenAPIToFunctions {
 
@@ -75,13 +73,13 @@ public class OpenAPIToFunctions {
         return functions;
     }
 
-    private static final String SYSTEM_MESSAGE = "You are a helpful assistant.Respond to the following prompt by using function_call " +
+    public static final String SYSTEM_MESSAGE = "You are a helpful assistant.Respond to the following prompt by using function_call " +
                                                  "and then summarize actions. Ask for clarification if a user request is ambiguous.";
-    private static final String USER_INSTRUCTION = "Instruction: Get all the events. Then create a new event named AGI Party. Then " +
+    public static final String USER_INSTRUCTION = "Instruction: Get all the events. Then create a new event named AGI Party. Then " +
                                                    "delete event with id 2456.";
-    private static final Integer MAX_CALLS = 5;
+    public static final Integer MAX_CALLS = 5;
 
-    private static final String BASE_URL = "https://us-central1-aiplatform.googleapis.com/v1";
+    public static final String BASE_URL = "https://us-central1-aiplatform.googleapis.com/v1";
 
     public String postRequest(String url, String authToken, List<String> messages) throws IOException {
         // Create a JSON object to send as the request body.
@@ -134,63 +132,5 @@ public class OpenAPIToFunctions {
             System.out.println("The response body is: " + response.body().toString());
         }
         return response.body().toString();
-    }
-
-
-    public static void main(String[] args) {
-        // Assuming openapiSpec is a JSONObject representing the OpenAPI specification
-        // Create a JSONParser object
-        JSONParser parser = new JSONParser();
-        JSONObject openapiSpec = new JSONObject(); // Replace this with your actual JSON object
-        // Parse the JSON string into a JSONObject object
-        try {
-            JSONObject json = new JSONObject();
-
-            // Use the ClassLoader class to get the input stream for the JSON file.
-            InputStream inputStream = ClassLoader.getSystemResourceAsStream("openapi-spec-quotes.json");
-            Scanner scanner = new Scanner(inputStream).useDelimiter("\\A");
-            String jsonString = scanner.hasNext() ? scanner.next() : "";
-            System.out.println(jsonString);
-            // Pass the input stream to the JSONObject constructor.
-            openapiSpec = (JSONObject) parser.parse(jsonString);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-        OpenAPIToFunctions openApiSpec = new OpenAPIToFunctions();
-        List<JSONObject> functions = openApiSpec.openapiToFunctions(openapiSpec);
-
-        for (JSONObject function : functions) {
-            System.out.println(function.toJSONString());
-            System.out.println();
-        }
-
-        String authToken = "YOUR_API_KEY_HERE"; // Replace with your actual API key
-
-        List<String> messages = new ArrayList<>();
-        messages.add("{\"content\": \"" + SYSTEM_MESSAGE + "\", \"role\": \"system\"}");
-        messages.add("{\"content\": \"" + USER_INSTRUCTION + "\", \"role\": \"user\"}");
-
-        int numCalls = 0;
-        while (numCalls < MAX_CALLS) {
-            try {
-                String response = openApiSpec.postRequest(BASE_URL, authToken, messages);
-                System.out.println(response);
-            } catch (IOException e) {
-                System.out.println("Message");
-
-                System.out.println("Exception:"+e.getMessage());
-                break;
-            }
-            // Handle the JSON response here
-            // Parse the response and process according to your requirements
-            // For brevity, the actual parsing and handling of the response are omitted
-
-            // Simulating the loop condition
-            numCalls++;
-            if (numCalls >= MAX_CALLS) {
-                System.out.println("Reached max chained function calls: " + MAX_CALLS);
-                break;
-            }
-        }
     }
 }
