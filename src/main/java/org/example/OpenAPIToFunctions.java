@@ -21,7 +21,7 @@ public class OpenAPIToFunctions {
 
     public static final String SYSTEM_MESSAGE = "You are a helpful assistant. Respond to the instruction prompt by using the functions listed. And then summarize actions. Ask for clarification if a user request is ambiguous.";
     public static final String USER_INSTRUCTION = "Instruction: Get all quotes. Then create a new quote named AGI Party. Then " +
-            "delete quote with id 2456. Generate the functions in a java controller class, the service class, and pojo data class.";
+            "delete quote with id 2456. Generate the functions in a java controller class, the service class, and pojo data class. Then generate the unit test for the service class.";
     public static final Integer MAX_CALLS = 1;
 
     public static final String BASE_URL = "https://us-central1-aiplatform.googleapis.com/v1/projects/yanni-test3/locations/us-central1/publishers/google/models/text-bison:predict";
