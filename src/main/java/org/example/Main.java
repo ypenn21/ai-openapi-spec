@@ -38,33 +38,36 @@ public class Main {
             System.out.println();
         }
 
-        String authToken = "YOUR_API_KEY_HERE"; // Replace with your actual API key
+        //gcloud auth print-access-token
+        String authToken = "Bearer ya29.a0AfB_byAqON_WMRG1uQSTU84v7iLkitIAuZLBFOW3CbC3bsmca5RnCQ49ff2Hivu942f_Szc-P8shWp_mGwbmeKacAfv8uxeBEckjWi98HCt1-fVf-aDRgmYifqPr-myJDfgYrFwzjEh2nlQUCxeg6A0N2HuHRxYGFpWQTKp9TabHaCgYKAd0SAQ4SFQHGX2MieB9LKk98JDqdGmkf7Io-Eg0179"; // Replace with your actual API key
 
         List<String> messages = new ArrayList<>();
-        messages.add("{\"content\": \"" + OpenAPIToFunctions.SYSTEM_MESSAGE + "\", \"role\": \"system\"}");
-        messages.add("{\"content\": \"" + OpenAPIToFunctions.USER_INSTRUCTION + "\", \"role\": \"user\"}");
+//        messages.add("{\"content\": \"" + OpenAPIToFunctions.SYSTEM_MESSAGE + "\", \"role\": \"system\"}");
+//        messages.add("{\"content\": \"" + OpenAPIToFunctions.USER_INSTRUCTION + "\", \"role\": \"user\"}");
+        messages.add(OpenAPIToFunctions.SYSTEM_MESSAGE);
+        messages.add( OpenAPIToFunctions.USER_INSTRUCTION);
 
         int numCalls = 0;
-//        while (numCalls < OpenAPIToFunctions.MAX_CALLS) {
-//            try {
-//                String response = openApiSpec.postRequestVertexAI(OpenAPIToFunctions.BASE_URL, authToken, messages);
-//                System.out.println(response);
-//            } catch (IOException e) {
-//                System.out.println("Message");
-//
-//                System.out.println("Exception:"+e.getMessage());
-//                break;
-//            }
-//            // Handle the JSON response here
-//            // Parse the response and process according to your requirements
-//            // For brevity, the actual parsing and handling of the response are omitted
-//
-//            // Simulating the loop condition
-//            numCalls++;
-//            if (numCalls >= OpenAPIToFunctions.MAX_CALLS) {
-//                System.out.println("Reached max chained function calls: " + OpenAPIToFunctions.MAX_CALLS);
-//                break;
-//            }
-//        }
+        while (numCalls < OpenAPIToFunctions.MAX_CALLS) {
+            try {
+                String response = openApiSpec.postRequestVertexAI(OpenAPIToFunctions.BASE_URL, authToken, messages, functions);
+                System.out.println(response);
+            } catch (IOException e) {
+                System.out.println("Message");
+
+                System.out.println("Exception:"+e.getMessage());
+                break;
+            }
+            // Handle the JSON response here
+            // Parse the response and process according to your requirements
+            // For brevity, the actual parsing and handling of the response are omitted
+
+            // Simulating the loop condition
+            numCalls++;
+            if (numCalls >= OpenAPIToFunctions.MAX_CALLS) {
+                System.out.println("Reached max chained function calls: " + OpenAPIToFunctions.MAX_CALLS);
+                break;
+            }
+        }
     }
 }
