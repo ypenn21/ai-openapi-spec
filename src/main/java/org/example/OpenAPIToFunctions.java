@@ -21,7 +21,7 @@ public class OpenAPIToFunctions {
 
     public static final String SYSTEM_MESSAGE = "You are a helpful assistant. Respond to the instruction prompt by using the functions listed. And then summarize actions. Ask for clarification if a user request is ambiguous.";
     public static final String USER_INSTRUCTION = "Instruction: Get all quotes. Then create a new quote named AGI Party. Then " +
-            "delete quote with id 2456. The functions are in java";
+            "delete quote with id 2456. Generate the functions in a java controller class, the service class, and pojo data class.";
     public static final Integer MAX_CALLS = 1;
 
     public static final String BASE_URL = "https://us-central1-aiplatform.googleapis.com/v1/projects/yanni-test3/locations/us-central1/publishers/google/models/text-bison:predict";
@@ -78,7 +78,7 @@ public class OpenAPIToFunctions {
         return functions;
     }
 
-    public String postRequestVertexAI(String url, String authToken, List<String> messages, List<JSONObject> functions) throws IOException {
+    public JSONObject postRequestVertexAI(String url, String authToken, List<String> messages, List<JSONObject> functions) throws IOException {
         // Create a JSON object to send as the request body.
 
         // Create a URI for the API endpoint.
@@ -97,7 +97,7 @@ public class OpenAPIToFunctions {
         requestBody.put("instances", prompt);
         Map parameters = new HashMap<String, Double>();
         parameters.put("temperature", 0.2);
-        parameters.put("maxOutputTokens", 256);
+        parameters.put("maxOutputTokens", 500);
         parameters.put("topK", 40);
         parameters.put("topP", 0.95);
         requestBody.put("parameters", parameters);
@@ -116,6 +116,7 @@ public class OpenAPIToFunctions {
 
         // Send the request and get the response.
         HttpResponse<String> response = null;
+        JSONObject result = null;
         try {
             response = client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
         } catch (InterruptedException e) {
@@ -130,7 +131,6 @@ public class OpenAPIToFunctions {
 //            InputStreamReader reader = new InputStreamReader(new ByteArrayInputStream(body.getBytes()));
             JSONParser parser = new JSONParser();
             // Parse the JSON string into a JSONObject object
-            JSONObject result = null;
             try {
                 result = (JSONObject) parser.parse(body);
             } catch (ParseException e) {
@@ -148,6 +148,6 @@ public class OpenAPIToFunctions {
             System.out.println("The response status code is: " + response.statusCode());
             System.out.println("The response body is: " + response.body().toString());
         }
-        return response.body().toString();
+        return result;
     }
 }

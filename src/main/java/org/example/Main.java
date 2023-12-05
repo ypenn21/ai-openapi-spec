@@ -1,14 +1,13 @@
 package org.example;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -27,47 +26,52 @@ public class Main {
             System.out.println(jsonString);
             // Pass the input stream to the JSONObject constructor.
             openapiSpec = (JSONObject) parser.parse(jsonString);
+
+            OpenAPIToFunctions openApiSpec = new OpenAPIToFunctions();
+            List<JSONObject> functions = openApiSpec.openapiToFunctions(openapiSpec);
+
+            for (JSONObject function : functions) {
+                System.out.println(function.toJSONString());
+                System.out.println();
+            }
+
+            //gcloud auth print-access-token
+            String authToken = "Bearer ya29.a0AfB_byD9BgQXEkfG9tVZCbP_GZIOazIrLtQqPlYYr8kid1rheeKF0jHBu2gzFjeSM3s3-md6Qmxgaaa7ClGu1z0wkFah7i8mzUMufd2Zv7--38RId2-rdDE83SthfoSkmLB6pMJRp88bd9vhfBuzG1rQOEu3I4wNuDQF9XvDan6haCgYKAaQSAQ4SFQHGX2Mi2eNHPZH15OzaxdLokZGFXQ0179"; // Replace with your actual API key
+
+            List<String> messages = new ArrayList<>();
+    //        messages.add("{\"content\": \"" + OpenAPIToFunctions.SYSTEM_MESSAGE + "\", \"role\": \"system\"}");
+    //        messages.add("{\"content\": \"" + OpenAPIToFunctions.USER_INSTRUCTION + "\", \"role\": \"user\"}");
+            messages.add(OpenAPIToFunctions.SYSTEM_MESSAGE);
+            messages.add( OpenAPIToFunctions.USER_INSTRUCTION);
+
+            int numCalls = 0;
+            while (numCalls < OpenAPIToFunctions.MAX_CALLS) {
+                try {
+                    JSONObject response = openApiSpec.postRequestVertexAI(OpenAPIToFunctions.BASE_URL, authToken, messages, functions);
+                    System.out.println(response.toJSONString());
+                    String pred = response.get("predictions")+"";
+                    String content = ((JSONArray) parser.parse(pred)).get(0)+"";
+                    JSONObject contentMetaData = (JSONObject) parser.parse(content);
+                    System.out.println("content: "+contentMetaData.get("content"));
+                } catch (IOException e) {
+                    System.out.println("Message");
+
+                    System.out.println("Exception:"+e.getMessage());
+                    break;
+                }
+                // Handle the JSON response here
+                // Parse the response and process according to your requirements
+                // For brevity, the actual parsing and handling of the response are omitted
+
+                // Simulating the loop condition
+                numCalls++;
+                if (numCalls >= OpenAPIToFunctions.MAX_CALLS) {
+                    System.out.println("Reached max chained function calls: " + OpenAPIToFunctions.MAX_CALLS);
+                    break;
+                }
+        }
         } catch (ParseException e) {
             throw new RuntimeException(e);
-        }
-        OpenAPIToFunctions openApiSpec = new OpenAPIToFunctions();
-        List<JSONObject> functions = openApiSpec.openapiToFunctions(openapiSpec);
-
-        for (JSONObject function : functions) {
-            System.out.println(function.toJSONString());
-            System.out.println();
-        }
-
-        //gcloud auth print-access-token
-        String authToken = "Bearer ya29.a0AfB_byAqON_WMRG1uQSTU84v7iLkitIAuZLBFOW3CbC3bsmca5RnCQ49ff2Hivu942f_Szc-P8shWp_mGwbmeKacAfv8uxeBEckjWi98HCt1-fVf-aDRgmYifqPr-myJDfgYrFwzjEh2nlQUCxeg6A0N2HuHRxYGFpWQTKp9TabHaCgYKAd0SAQ4SFQHGX2MieB9LKk98JDqdGmkf7Io-Eg0179"; // Replace with your actual API key
-
-        List<String> messages = new ArrayList<>();
-//        messages.add("{\"content\": \"" + OpenAPIToFunctions.SYSTEM_MESSAGE + "\", \"role\": \"system\"}");
-//        messages.add("{\"content\": \"" + OpenAPIToFunctions.USER_INSTRUCTION + "\", \"role\": \"user\"}");
-        messages.add(OpenAPIToFunctions.SYSTEM_MESSAGE);
-        messages.add( OpenAPIToFunctions.USER_INSTRUCTION);
-
-        int numCalls = 0;
-        while (numCalls < OpenAPIToFunctions.MAX_CALLS) {
-            try {
-                String response = openApiSpec.postRequestVertexAI(OpenAPIToFunctions.BASE_URL, authToken, messages, functions);
-                System.out.println(response);
-            } catch (IOException e) {
-                System.out.println("Message");
-
-                System.out.println("Exception:"+e.getMessage());
-                break;
-            }
-            // Handle the JSON response here
-            // Parse the response and process according to your requirements
-            // For brevity, the actual parsing and handling of the response are omitted
-
-            // Simulating the loop condition
-            numCalls++;
-            if (numCalls >= OpenAPIToFunctions.MAX_CALLS) {
-                System.out.println("Reached max chained function calls: " + OpenAPIToFunctions.MAX_CALLS);
-                break;
-            }
         }
     }
 }
