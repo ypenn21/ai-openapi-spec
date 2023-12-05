@@ -36,7 +36,7 @@ public class Main {
             }
 
             //gcloud auth print-access-token
-            String authToken = "Bearer ya29.a0AfB_byD9BgQXEkfG9tVZCbP_GZIOazIrLtQqPlYYr8kid1rheeKF0jHBu2gzFjeSM3s3-md6Qmxgaaa7ClGu1z0wkFah7i8mzUMufd2Zv7--38RId2-rdDE83SthfoSkmLB6pMJRp88bd9vhfBuzG1rQOEu3I4wNuDQF9XvDan6haCgYKAaQSAQ4SFQHGX2Mi2eNHPZH15OzaxdLokZGFXQ0179"; // Replace with your actual API key
+            String authToken = "Bearer %t"; // Replace with your actual API key
 
             List<String> messages = new ArrayList<>();
     //        messages.add("{\"content\": \"" + OpenAPIToFunctions.SYSTEM_MESSAGE + "\", \"role\": \"system\"}");
