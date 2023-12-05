@@ -30,6 +30,9 @@ public class OpenAPIToFunctions {
         List<JSONObject> functions = new ArrayList<>();
 
         JSONObject paths = (JSONObject) openapiSpec.get("paths");
+        JSONObject schemas = new JSONObject();
+        schemas.put("components", openapiSpec.getOrDefault("components", new JSONObject()));
+        functions.add(schemas);
         for (Object pathKey : paths.keySet()) {
             String path = (String) pathKey;
             JSONObject methods = (JSONObject) paths.get(path);
@@ -97,7 +100,7 @@ public class OpenAPIToFunctions {
         requestBody.put("instances", prompt);
         Map parameters = new HashMap<String, Double>();
         parameters.put("temperature", 0.2);
-        parameters.put("maxOutputTokens", 500);
+        parameters.put("maxOutputTokens", 1000);
         parameters.put("topK", 40);
         parameters.put("topP", 0.95);
         requestBody.put("parameters", parameters);
