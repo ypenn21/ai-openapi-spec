@@ -32,7 +32,6 @@ public class OpenAPIToFunctions {
         JSONObject paths = (JSONObject) openapiSpec.get("paths");
         JSONObject schemas = new JSONObject();
         schemas.put("components", openapiSpec.getOrDefault("components", new JSONObject()));
-        functions.add(schemas);
         for (Object pathKey : paths.keySet()) {
             String path = (String) pathKey;
             JSONObject methods = (JSONObject) paths.get(path);
@@ -78,7 +77,13 @@ public class OpenAPIToFunctions {
             }
         }
 
-        return functions;
+        List<JSONObject> functionsComponents = new ArrayList<>();
+        JSONObject functionJsonObject = new JSONObject();
+        functionJsonObject.put("functions", functions);
+        functionsComponents.add(functionJsonObject);
+        functionsComponents.add(schemas);
+
+        return functionsComponents;
     }
 
     public JSONObject postRequestVertexAI(String url, String authToken, List<String> messages, List<JSONObject> functions) throws IOException {
