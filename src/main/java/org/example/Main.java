@@ -47,6 +47,8 @@ public class Main {
             int numCalls = 0;
             while (numCalls < OpenAPIToFunctions.MAX_CALLS) {
                 try {
+                    // Handle the JSON response here
+                    // Parse the response and process according to your requirements
                     JSONObject response = openApiSpec.postRequestVertexAI(OpenAPIToFunctions.BASE_URL, authToken, messages, functions);
                     System.out.println(response.toJSONString());
                     String pred = response.get("predictions")+"";
@@ -59,9 +61,6 @@ public class Main {
                     System.out.println("Exception:"+e.getMessage());
                     break;
                 }
-                // Handle the JSON response here
-                // Parse the response and process according to your requirements
-                // For brevity, the actual parsing and handling of the response are omitted
 
                 // Simulating the loop condition
                 numCalls++;
