@@ -36,7 +36,7 @@ public class Main {
             }
 
             //gcloud auth print-access-token
-            String authToken = "Bearer %t"; // Replace with your actual API key
+            String authToken = "Bearer %t"; // Replace with your actual bearer token
 
             List<String> messages = new ArrayList<>();
     //        messages.add("{\"content\": \"" + OpenAPIToFunctions.SYSTEM_MESSAGE + "\", \"role\": \"system\"}");
