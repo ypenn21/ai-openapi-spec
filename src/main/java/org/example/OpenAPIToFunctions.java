@@ -50,11 +50,11 @@ public class OpenAPIToFunctions {
                 // 3. Extract a description and parameters.
                 String desc = (String) spec.getOrDefault("description", spec.getOrDefault("summary", ""));
 
-                JSONObject schema = new JSONObject();
+//                JSONObject schema = new JSONObject();
                 JSONObject requestBody = (JSONObject) spec.getOrDefault("requestBody", new JSONObject());
-                if (!requestBody.isEmpty()) {
-                    schema.put("requestBody", requestBody.get("schema"));
-                }
+//                if (!requestBody.isEmpty()) {
+//                    schema.put("requestBody", requestBody.entrySet());
+//                }
 
                 List<JSONObject> params = (List<JSONObject>) spec.getOrDefault("parameters", new ArrayList<>());
                 JSONObject paramProperties = new JSONObject();
@@ -66,8 +66,8 @@ public class OpenAPIToFunctions {
                 JSONObject parameters = new JSONObject();
                 if(!paramProperties.isEmpty())
                     parameters.put("properties", paramProperties);
-                if(!schema.isEmpty())
-                    parameters.put("requestBody", schema);
+                if(!requestBody.isEmpty())
+                    parameters.put("requestBody", requestBody);
 //                if(!parameters.isEmpty())
 //                    schema.put("parameters", parameters);
 
