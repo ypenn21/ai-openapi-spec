@@ -71,6 +71,6 @@ I hope this explanation makes things a bit clearer! Let me know if you have any 
 - **Iterative refinement:** You can provide feedback on the AI's suggestions, helping it learn and improve over time.
 
 
-** Current code sample is incomplete for function calling. The feature is in preview, and currently don't access. **
-** Current code the Vertex AI is utilizing PaLM 2 Text Bison pretrained llm. It is taking the open api spec as    **
-** input and generating controller class, service class, and pojo based on those specifications.                  **
+- ** Current code sample is incomplete for function calling. The feature is in preview, and currently don't access. **
+- ** Current code the Vertex AI is utilizing PaLM 2 Text Bison pretrained llm. It is taking the open api spec as    **
+- ** input and generating controller class, service class, and pojo based on those specifications.                  **
