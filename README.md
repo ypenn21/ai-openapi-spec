@@ -1,4 +1,4 @@
-# ai-openapi-spec
+# ai-openapi-spec Future state utilize Function Calling
 Using OpenAPI specification to Make Method calls in Java
 
 openapi spec generated from: 
@@ -70,7 +70,6 @@ I hope this explanation makes things a bit clearer! Let me know if you have any 
 - **Contextual understanding:** The AI can match functions to tasks based on a clearer understanding of the problem domain.
 - **Iterative refinement:** You can provide feedback on the AI's suggestions, helping it learn and improve over time.
 
-
-- ** Current code sample is incomplete for function calling. The feature is in preview, and currently don't access. **
-- ** Current code the Vertex AI is utilizing PaLM 2 Text Bison pretrained llm. It is taking the open api spec as    **
-- ** input and generating controller class, service class, and pojo based on those specifications.                  **
+**Current state of Project**
+- Current code sample is incomplete for function calling. The feature is in preview, and currently don't access.
+- Current code the Vertex AI is utilizing PaLM 2 Text Bison pretrained llm. It is taking the open api spec as Input and generating controller class, service class, and pojo based on those specifications.             
