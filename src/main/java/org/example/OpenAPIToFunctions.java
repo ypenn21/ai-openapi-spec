@@ -1,5 +1,6 @@
 package org.example;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -24,7 +25,7 @@ public class OpenAPIToFunctions {
             "delete quote with id 2456. Generate the functions in a java controller class, the service class, and pojo data class. Then generate the unit test for the service class.";
     public static final Integer MAX_CALLS = 1;
 
-    public static final String BASE_URL = "https://us-central1-aiplatform.googleapis.com/v1/projects/yanni-test3/locations/us-central1/publishers/google/models/text-bison:predict";
+    public static final String BASE_URL = "https://us-central1-aiplatform.googleapis.com/v1/projects/yanni-test3/locations/us-central1/publishers/google/models/gemini-pro:streamGenerateContent";
 
     public List<JSONObject> openapiToFunctions(JSONObject openapiSpec) {
         List<JSONObject> functions = new ArrayList<>();
@@ -85,8 +86,8 @@ public class OpenAPIToFunctions {
 
         return functionsComponents;
     }
-
-    public JSONObject postRequestVertexAI(String url, String authToken, List<String> messages, List<JSONObject> functions) throws IOException {
+    // Change to postRequestVertexAI use java client instead of the rest api endpoint: https://cloud.google.com/vertex-ai/docs/samples/aiplatform-predict-text-sentiment-analysis-sample?hl=en
+    public JSONArray postRequestVertexAI(String url, String authToken, List<String> messages, List<JSONObject> functions) throws IOException {
         // Create a JSON object to send as the request body.
 
         // Create a URI for the API endpoint.
@@ -96,19 +97,39 @@ public class OpenAPIToFunctions {
 
         // Create a JSON object to send as the request body.
         JSONObject requestBody = new JSONObject();
-        Map prompt = new HashMap<String, List<String>>();
+        Map prompt = new HashMap<String, String>();
+        Map safety = new HashMap<String, String>();
         // take a java string messages list concatenate all the elements into one big string
 //        String prompts = messages.stream().flatMap(str ->  Stream.of(str)).collect(Collectors.joining());
+//        String funs = " The functions to use are as follows: ";
+//        funs = funs + functions.stream().flatMap(str ->  Stream.of(str.toJSONString())).collect(Collectors.joining()) +" .";
+//        prompt.put("prompt", SYSTEM_MESSAGE + funs + USER_INSTRUCTION);
+//        requestBody.put("instances", prompt);
+//        Map parameters = new HashMap<String, Double>();
+//        parameters.put("temperature", 0.2);
+//        parameters.put("maxOutputTokens", 1000);
+//        parameters.put("topK", 40);
+//        parameters.put("topP", 0.95);
+//        requestBody.put("parameters", parameters);
         String funs = " The functions to use are as follows: ";
         funs = funs + functions.stream().flatMap(str ->  Stream.of(str.toJSONString())).collect(Collectors.joining()) +" .";
-        prompt.put("prompt", SYSTEM_MESSAGE + funs + USER_INSTRUCTION);
-        requestBody.put("instances", prompt);
+        JSONObject contents = new JSONObject();
+        prompt.put("text", SYSTEM_MESSAGE + funs + USER_INSTRUCTION);
+        contents.put("parts", prompt);
+        contents.put("role", "user");
+
+        safety.put("category", "HARM_CATEGORY_SEXUALLY_EXPLICIT");
+        safety.put("threshold", "BLOCK_LOW_AND_ABOVE");
+
         Map parameters = new HashMap<String, Double>();
         parameters.put("temperature", 0.2);
-        parameters.put("maxOutputTokens", 1000);
+        parameters.put("maxOutputTokens", 8192);
         parameters.put("topK", 40);
         parameters.put("topP", 0.95);
-        requestBody.put("parameters", parameters);
+
+        requestBody.put("contents", contents);
+        requestBody.put("safety_settings", safety);
+        requestBody.put("generation_config", parameters);
 
         // Create a POST request with the JSON object as the body.
         System.out.println(requestBody.toJSONString());
@@ -124,7 +145,7 @@ public class OpenAPIToFunctions {
 
         // Send the request and get the response.
         HttpResponse<String> response = null;
-        JSONObject result = null;
+        JSONArray result = null;
         try {
             response = client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
         } catch (InterruptedException e) {
@@ -140,7 +161,7 @@ public class OpenAPIToFunctions {
             JSONParser parser = new JSONParser();
             // Parse the JSON string into a JSONObject object
             try {
-                result = (JSONObject) parser.parse(body);
+                result = (JSONArray) parser.parse(body);
             } catch (ParseException e) {
                 throw new RuntimeException(e);
             }

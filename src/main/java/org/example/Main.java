@@ -39,7 +39,7 @@ public class Main {
         }
 
             //gcloud auth print-access-token
-        String authToken = "Bearer ya29.a0AfB_byDP5Pi1le_b43ehLW-uKRxpNqtwwLlInx6m2Ul6t4f1Mp23YEOrLu5Dcu7jMuF2Q9nfxxdyvXZX4-c9xH5WLafHTX6kHkm02cPKqJAHpW0zNzj5UMFjKcxmXnT8oqKYNgfZwj7_51yvXu4WnuYfzEpiecmG2Rci8YJOZyOnaCgYKAfASAQ4SFQHGX2MixVuMeDZJS5hE6dfj6ISqFA0179"; // Replace with your actual bearer token
+        String authToken = "Bearer ya29.a0AfB_byAPm5rp16SCX5njrcBRsRqu715YqH4CqrBTVSgHnQjVlxB60fjbwPGlD2Vrqu9qbeiCdMgKwK7sRULXDv9OnKK6cPPzo2mh_WHVuqxYLeW1AcxEr45ck-MJI7YjQMSjmvxcYbawLIE5QxBHIZwc3IkpYH3K1xbZdRrjPG9vaCgYKAQ0SAQ4SFQHGX2Mi93ElUUH8S24WXny50Y8WsQ0179"; // Replace with your actual bearer token
 
         List<String> messages = new ArrayList<>();
     //        messages.add("{\"content\": \"" + OpenAPIToFunctions.SYSTEM_MESSAGE + "\", \"role\": \"system\"}");
@@ -52,11 +52,16 @@ public class Main {
             try {
                     // Handle the JSON response here
                     // Parse the response and process according to your requirements
-                JSONObject response = openApiSpec.postRequestVertexAI(OpenAPIToFunctions.BASE_URL, authToken, messages, functions);
+                JSONArray response = openApiSpec.postRequestVertexAI(OpenAPIToFunctions.BASE_URL, authToken, messages, functions);
                 System.out.println(response.toJSONString());
-                JSONArray pred = (JSONArray) response.get("predictions");
-                JSONObject content = (JSONObject)pred.get(0);
-                System.out.println("content: "+content.get("content"));
+                for(int i=0; i<response.size();i++) {
+                    JSONObject content = (JSONObject) response.get(i);
+                    JSONArray candidate = (JSONArray) content.get("candidates");
+                    System.out.println(candidate.toJSONString());
+                }
+//                JSONArray pred = (JSONArray) response.get("predictions");
+//                JSONObject content = (JSONObject)pred.get(0);
+//                System.out.println("content: "+content.get("content"));
             } catch (IOException e) {
                 System.out.println("Message");
 
